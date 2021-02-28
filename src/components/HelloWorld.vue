@@ -97,7 +97,6 @@ export default {
   methods: {
     closeTag(tag) {
       // 关闭标签
-      // console.log(this.dynamicTags.indexOf(tag))
       let index = this.dynamicTags.indexOf(tag)
       this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
       if (this.dynamicTags.length <= 0) {
@@ -108,7 +107,7 @@ export default {
       }
     },
     handleOpen(key, keyPath) {
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
     },
     handleClose(key, keyPath) {
       // console.log(key, keyPath);
