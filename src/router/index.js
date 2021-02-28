@@ -21,7 +21,6 @@ export default new Router({
       name: 'HelloWorld',
       component: HelloWorld,
       children: [{
-        // 当 /user/:id/profile 匹配成功，
         path: 'test',
         component: () => import("../views/TestChildRouter")
       }]
