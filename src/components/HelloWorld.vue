@@ -1,6 +1,16 @@
 <template>
   <el-container>
-    <el-header>基于web的作业管理平台</el-header>
+    <el-header style="width: 100%">
+      <span class="title" style="width: 85%">基于web的作业管理平台</span>
+      <div style="width: 15%;float: right" v-show="!isLogin">
+        <el-link type="primary" :underline="false" @click="toLoginPage">登录</el-link>&nbsp;&nbsp;
+        <el-link type="primary" :underline="false">注册</el-link>
+      </div>
+      <div style="width: 15%;float: right" v-show="isLogin">
+        <i class="el-icon-user-solid">JusChui</i>
+        <el-button icon="el-icon-remove" style="background-color: #B3C0D1;border: none;">注销</el-button>
+      </div>
+    </el-header>
     <el-container>
       <el-aside width="200px">
         <!--Aside-->
@@ -72,11 +82,13 @@
             closable
             :disable-transitions="false"
             @close="closeTag(tag)"
+            @click="clickTag(tag)"
             :type="tag.type"
             effect="dark">
             {{ tag.name }}
           </el-tag>
         </el-row>
+        <router-view/>
       </el-main>
     </el-container>
   </el-container>
@@ -91,10 +103,15 @@ export default {
       dynamicTags: [],
       inputVisible: false,
       inputValue: '',
-      includeTag: true
+      includeTag: true,
+      isLogin: false
     }
   },
   methods: {
+    clickTag(tag) {
+      //点击标签
+      console.log(tag)
+    },
     closeTag(tag) {
       // 关闭标签
       let index = this.dynamicTags.indexOf(tag)
@@ -116,6 +133,7 @@ export default {
       // console.log(key, keyPath);
       this.inputValue = keyPath[1]
       this.handleInputConfirm()
+      this.$router.push({path: '/test'})
     },
     handleInputConfirm() {
       //增加新标签
@@ -124,6 +142,7 @@ export default {
       for (let i = 0; i < this.dynamicTags.length; i++) {
         tagNames.push(this.dynamicTags[i].name)
       }
+      //保持标签唯一
       if (tagNames.indexOf(inputValue) < 0) {
         for (let i = 0; i < this.dynamicTags.length; i++) {
           this.dynamicTags[i].type = 'info'
@@ -143,6 +162,7 @@ export default {
       this.inputValue = '';
     },
     isIncludeActive() {
+      //检查是否有激活状态的标签
       if (this.dynamicTags.length > 0) {
         for (let i = 0; i < this.dynamicTags.length; i++) {
           if (this.dynamicTags[i].type === '') {
@@ -151,6 +171,10 @@ export default {
         }
       }
       return false;
+    },
+    toLoginPage() {
+      //跳转登录页面
+      this.$router.push({path: '/login'})
     }
   },
   mounted() {
@@ -205,9 +229,12 @@ body {
   height: 80px !important;
 }
 
-.el-header {
+.title {
   font-size: xxx-large;
   font-family: cursive;
+}
+
+.el-header {
   padding-left: 40px;
 }
 
