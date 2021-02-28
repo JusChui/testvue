@@ -64,14 +64,17 @@
         </el-row>
       </el-aside>
       <el-main>
-        <el-row style="line-height: 0;height: auto;float: left;padding: 0.5%;background: #C0C4CC;" v-show="includeTag">
+        <el-row style="line-height: 0;height: auto;float: left;padding: 0.5%;background: #C0C4CC;width: 100%"
+                v-show="includeTag">
           <el-tag
-            :key="tag"
+            :key="tag.name"
             v-for="tag in dynamicTags"
             closable
             :disable-transitions="false"
-            @close="closeTag(tag)">
-            {{ tag }}
+            @close="closeTag(tag)"
+            :type="tag.type"
+            effect="dark">
+            {{ tag.name }}
           </el-tag>
         </el-row>
       </el-main>
@@ -85,7 +88,7 @@ export default {
   data() {
     return {
       msg: 'Welcome to Your Vue.js App',
-      dynamicTags: ['标签一', '标签二', '标签三'],
+      dynamicTags: [],
       inputVisible: false,
       inputValue: '',
       includeTag: true
@@ -94,31 +97,66 @@ export default {
   methods: {
     closeTag(tag) {
       // 关闭标签
+      // console.log(this.dynamicTags.indexOf(tag))
+      let index = this.dynamicTags.indexOf(tag)
       this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
       if (this.dynamicTags.length <= 0) {
         this.includeTag = false
+      }
+      if (this.isIncludeActive() === false && this.dynamicTags.length > 0) {
+        this.dynamicTags[index - 1].type = ''
       }
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
     handleClose(key, keyPath) {
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
     },
     handleSelect(key, keyPath) {
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
       this.inputValue = keyPath[1]
       this.handleInputConfirm()
     },
     handleInputConfirm() {
       //增加新标签
       let inputValue = this.inputValue;
-      if (inputValue) {
-        this.dynamicTags.push(inputValue);
+      let tagNames = []
+      for (let i = 0; i < this.dynamicTags.length; i++) {
+        tagNames.push(this.dynamicTags[i].name)
+      }
+      if (tagNames.indexOf(inputValue) < 0) {
+        for (let i = 0; i < this.dynamicTags.length; i++) {
+          this.dynamicTags[i].type = 'info'
+        }
+        this.dynamicTags.push({name: inputValue, type: ''});
         this.includeTag = true
+      } else {
+        for (let i = 0; i < this.dynamicTags.length; i++) {
+          if (this.dynamicTags[i].name === inputValue) {
+            this.dynamicTags[i].type = ''
+          } else {
+            this.dynamicTags[i].type = 'info'
+          }
+        }
       }
       this.inputVisible = false;
       this.inputValue = '';
+    },
+    isIncludeActive() {
+      if (this.dynamicTags.length > 0) {
+        for (let i = 0; i < this.dynamicTags.length; i++) {
+          if (this.dynamicTags[i].type === '') {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+  },
+  mounted() {
+    if (this.dynamicTags.length <= 0) {
+      this.includeTag = false
     }
   }
 }
@@ -128,6 +166,10 @@ export default {
 <style>
 body {
   margin: 0;
+}
+
+.el-tag {
+  float: left;
 }
 
 .el-tag + .el-tag {
