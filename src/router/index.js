@@ -26,6 +26,11 @@ export default new Router({
       }]
     },
     {
+      path: '/home',
+      name: 'HelloWorld',
+      component: HelloWorld
+    },
+    {
       path: '/login',
       component: () => import("../views/Test")
     }
