@@ -45,16 +45,22 @@ export default {
         if (valid) {
           // 使用 vue-router 路由到指定页面，该方式称之为编程式导航
           //todo 需向后端发送登录请求并判断，进行重定向
-          // this.$axios.post()
-          this.$router.push("/home");
+          /*this.$axios.post('', {})
+            .then(function (response) {
+              console.log(response);
+              this.$router.push("/home");
+            }).catch(function (error) {
+            console.log(error);
+          });*/
         } else {
-
           return false;
         }
       });
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      for (let formKey in this.form) {
+        this.form[formKey] = ''
+      }
     }
   }
 }

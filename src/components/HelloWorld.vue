@@ -109,8 +109,13 @@ export default {
   },
   methods: {
     clickTag(tag) {
-      //点击标签
-      console.log(tag)
+      //点击标签事件
+      // console.log(tag)
+      let index = this.dynamicTags.indexOf(tag)
+      for (let i = 0; i < this.dynamicTags.length; i++) {
+        this.dynamicTags[i].type = 'info'
+      }
+      this.dynamicTags[index].type = ''
     },
     closeTag(tag) {
       // 关闭标签
@@ -196,7 +201,7 @@ body {
 }
 
 .el-tag + .el-tag {
-  margin-left: 10px;
+  margin-left: 1px;
 }
 
 .button-new-tag {
