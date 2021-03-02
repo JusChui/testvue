@@ -9,8 +9,8 @@
         <el-input type="password" placeholder="请输入密码" v-model="form.password"/>
       </el-form-item>
       <el-form-item>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
-        <el-button type="primary" v-on:click="onSubmit('loginForm')">登录</el-button>
+        <el-button v-on:click="resetForm('form')">重置</el-button>
+        <el-button type="primary" v-on:click="onSubmit('form')">登录</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -43,6 +43,7 @@ export default {
       // 为表单绑定验证功能
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          // console.log(this.$refs[formName])
           // 使用 vue-router 路由到指定页面，该方式称之为编程式导航
           //todo 需向后端发送登录请求并判断，进行重定向
           /*this.$axios.post('', {})
@@ -58,6 +59,7 @@ export default {
       });
     },
     resetForm(formName) {
+      // this.$refs[formName].resetFields();
       for (let formKey in this.form) {
         this.form[formKey] = ''
       }
