@@ -22,17 +22,23 @@ export default new Router({
       component: HelloWorld,
       children: [{
         path: 'test',
+        name: "TestChildRouter",
         component: () => import("../views/TestChildRouter")
       }]
     },
-    {
+    /*{
       path: '/home',
       name: 'HelloWorld',
       component: HelloWorld
-    },
+    },*/
     {
       path: '/login',
+      name: "Test",
       component: () => import("../views/Test")
+    }, {
+      path: "/register",
+      name: "Register",
+      component: () => import("../views/Register")
     }
   ]
 })

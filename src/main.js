@@ -9,6 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.use(ElementUI)
 Vue.config.productionTip = false
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 Vue.prototype.$axios = axios
 
 /* eslint-disable no-new */

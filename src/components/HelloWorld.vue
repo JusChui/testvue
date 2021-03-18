@@ -4,11 +4,12 @@
       <span class="title" style="width: 85%">基于web的作业管理平台</span>
       <div style="width: 15%;float: right" v-show="!isLogin">
         <el-link type="primary" :underline="false" @click="toLoginPage">登录</el-link>&nbsp;&nbsp;
-        <el-link type="primary" :underline="false">注册</el-link>
+        <el-link type="primary" :underline="false" @click="toRegisterPage">注册</el-link>
       </div>
       <div style="width: 15%;float: right" v-show="isLogin">
-        <i class="el-icon-user-solid">JusChui</i>
-        <el-button icon="el-icon-remove" style="background-color: #B3C0D1;border: none;">注销</el-button>
+        <i class="el-icon-user-solid">{{ name }}</i>
+        <el-button icon="el-icon-remove" style="background-color: #B3C0D1;border: none;" @click="loginOut">注销
+        </el-button>
       </div>
     </el-header>
     <el-container>
@@ -104,7 +105,8 @@ export default {
       inputVisible: false,
       inputValue: '',
       includeTag: true,
-      isLogin: false
+      isLogin: false,
+      name: ''
     }
   },
   methods: {
@@ -180,16 +182,32 @@ export default {
     toLoginPage() {
       //跳转登录页面
       this.$router.push({path: '/login'})
+    },
+    toRegisterPage() {
+      //跳转注册页面
+      this.$router.push({path: '/register'})
+    },
+    loginOut() {
+      localStorage.setItem('isLogin', false)
+      this.isLogin = false
     }
   },
   mounted() {
     if (this.dynamicTags.length <= 0) {
       this.includeTag = false
     }
+    let login = localStorage.getItem('isLogin')
+    let usr = localStorage.getItem('usrinfo')
+    usr = JSON.parse(usr)
+    this.name = usr.name
+    if (login != null || login != '') {
+      this.isLogin = true
+    } else {
+      this.isLogin = false
+    }
   }
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 body {
@@ -258,10 +276,6 @@ body {
   line-height: 160px;
   padding: 0;
 }
-
-/*body > .el-container {
-  margin-bottom: 40px;
-}*/
 
 .el-container:nth-child(5) .el-aside,
 .el-container:nth-child(6) .el-aside {
