@@ -25,18 +25,18 @@
 <script>
 export default {
   name: "Register",
-  data(){
-    return{
-      ruleForm:{
-        uname:'',
-        pwd:''
+  data() {
+    return {
+      ruleForm: {
+        uname: '',
+        pwd: ''
       }
     };
   },
-  methods:{
-    toLogin(){
+  methods: {
+    toLogin() {
       this.$router.push({
-        path:'/Login'
+        path: '/Login'
       });
     }
   }
