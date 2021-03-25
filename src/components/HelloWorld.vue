@@ -6,8 +6,8 @@
         <el-link type="primary" :underline="false" @click="toLoginPage">登录</el-link>&nbsp;&nbsp;
         <el-link type="primary" :underline="false" @click="toRegisterPage">注册</el-link>
       </div>
-      <div style="width: 15%;float: right" v-show="isLogin">
-        <i class="el-icon-user-solid">{{ name }}</i>
+      <div style="width: 18%;float: right" v-show="isLogin">
+        <i class="el-icon-user-solid">{{ name }}{{ status }}</i>
         <el-button icon="el-icon-remove" style="background-color: #B3C0D1;border: none;" @click="loginOut">注销
         </el-button>
       </div>
@@ -106,7 +106,8 @@ export default {
       inputValue: '',
       includeTag: true,
       isLogin: false,
-      name: ''
+      name: '',
+      status: ''
     }
   },
   methods: {
@@ -189,7 +190,10 @@ export default {
     },
     loginOut() {
       localStorage.setItem('isLogin', false)
+      localStorage.removeItem("usrinfo")
       this.isLogin = false
+      this.status = ''
+      this.name = ''
     }
   },
   mounted() {
@@ -199,9 +203,12 @@ export default {
     let login = localStorage.getItem('isLogin')
     let usr = localStorage.getItem('usrinfo')
     usr = JSON.parse(usr)
-    this.name = usr.name
-    if (login != null || login != '') {
+    console.log(usr)
+    // console.log(usr)
+    if (login === true) {
       this.isLogin = true
+      this.status = usr.status
+      this.name = usr.name
     } else {
       this.isLogin = false
     }

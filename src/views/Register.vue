@@ -3,10 +3,17 @@
     <el-form :model="ruleForm" label-width="100px" class="demo-ruleForm login-container">
       <h3 style="text-align: center;">用户注册</h3>
       <el-form-item label="用户名">
-        <el-input v-model="ruleForm.uname"></el-input>
+        <el-input v-model="ruleForm.uname" placeholder="请输入工号/学号"></el-input>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input type="password" v-model="ruleForm.pwd"></el-input>
+        <el-input type="password" v-model="ruleForm.pwd" placeholder="请输入密码"></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱">
+        <el-input v-model="ruleForm.email" placeholder="请输入邮箱"></el-input>
+      </el-form-item>
+      <el-form-item label="身份">
+        <el-radio v-model="ruleForm.status" label="teacher">教师</el-radio>
+        <el-radio v-model="ruleForm.status" label="student">学生</el-radio>
       </el-form-item>
       <el-form-item>
         <el-row>
@@ -17,6 +24,9 @@
             </div>
           </el-col>
         </el-row>
+      </el-form-item>
+      <el-form-item>
+        <el-link type="primary" :underline="false" @click="toLogin">已有账号?去登录</el-link>
       </el-form-item>
     </el-form>
   </div>
@@ -29,7 +39,9 @@ export default {
     return {
       ruleForm: {
         uname: '',
-        pwd: ''
+        pwd: '',
+        status: '',
+        email: ''
       }
     };
   },

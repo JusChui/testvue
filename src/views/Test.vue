@@ -55,7 +55,7 @@ export default {
       if (this.checkForm()) {
         this.$axios.post('/login', this.form)
           .then(function (response) {
-            console.log(response);
+            // console.log(response);
             if (response.status === 200) {
               if (response.data.returnCode === "200") {
                 that.$message({
@@ -65,7 +65,7 @@ export default {
                 // console.log(response.data.bean.id)
                 localStorage.setItem('isLogin', true)
                 localStorage.setItem('usrinfo', JSON.stringify(response.data.bean))
-                localStorage.setItem('id', response.data.bean.id)
+                // localStorage.setItem('id', response.data.bean.id)
                 that.$router.push("/")
               } else {
                 that.$message({
