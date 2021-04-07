@@ -64,7 +64,8 @@ export default {
                 that.$router.push("/")
               } else {
                 that.$message({
-                  message: response.data.returnMessage,
+                  message: response.data.rtMsg,
+                  // message:'登录失败',
                   type: 'warning'
                 })
               }

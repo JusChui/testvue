@@ -48,7 +48,7 @@
                   <el-menu-item index="2-4">选项2-4</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
-              <el-submenu index="3">
+              <el-submenu index="3" v-show="usr.status === '老师'? true:false">
                 <template slot="title">
                   <i class="el-icon-document"></i>
                   <span>导航三</span>
@@ -60,7 +60,7 @@
                   <el-menu-item index="3-4">选项3-4</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
-              <el-submenu index="4">
+              <el-submenu index="4" v-show="usr.status === '老师'? true:false">
                 <template slot="title">
                   <i class="el-icon-setting"></i>
                   <span slot="title">导航四</span>
