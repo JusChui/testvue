@@ -30,10 +30,10 @@
                   <span>导航一</span>
                 </template>
                 <el-menu-item-group>
-                  <el-menu-item index="选项1-1">选项1-1</el-menu-item>
-                  <el-menu-item index="选项1-2">选项1-2</el-menu-item>
-                  <el-menu-item index="选项1-3">选项1-3</el-menu-item>
-                  <el-menu-item index="选项1-4">选项1-4</el-menu-item>
+                  <el-menu-item index="选项1-1|test">选项1-1</el-menu-item>
+                  <el-menu-item index="选项1-2|test">选项1-2</el-menu-item>
+                  <el-menu-item index="选项1-3|test">选项1-3</el-menu-item>
+                  <el-menu-item index="选项1-4|test">选项1-4</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
               <el-submenu index="2">
@@ -42,22 +42,20 @@
                   <span>导航二</span>
                 </template>
                 <el-menu-item-group>
-                  <el-menu-item index="2-1">选项2-1</el-menu-item>
-                  <el-menu-item index="2-2">选项2-2</el-menu-item>
-                  <el-menu-item index="2-3">选项2-3</el-menu-item>
-                  <el-menu-item index="2-4">选项2-4</el-menu-item>
+                  <el-menu-item index="2-1|test">选项2-1</el-menu-item>
+                  <el-menu-item index="2-2|test">选项2-2</el-menu-item>
+                  <el-menu-item index="2-3|test">选项2-3</el-menu-item>
+                  <el-menu-item index="2-4|test">选项2-4</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
               <el-submenu index="3" v-show="usr.status === '老师'? true:false">
                 <template slot="title">
                   <i class="el-icon-document"></i>
-                  <span>导航三</span>
+                  <span>我的学生</span>
                 </template>
                 <el-menu-item-group>
-                  <el-menu-item index="3-1">选项3-1</el-menu-item>
-                  <el-menu-item index="3-2">选项3-2</el-menu-item>
-                  <el-menu-item index="3-3">选项3-3</el-menu-item>
-                  <el-menu-item index="3-4">选项3-4</el-menu-item>
+                  <el-menu-item index="查看所有学生|listStudent">查看所有学生</el-menu-item>
+                  <el-menu-item index="管理我的学生|test">管理我的学生</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
               <el-submenu index="4" v-show="usr.status === '老师'? true:false">
@@ -66,8 +64,8 @@
                   <span slot="title">导航四</span>
                 </template>
                 <el-menu-item-group>
-                  <el-menu-item index="4-1">选项4-1</el-menu-item>
-                  <el-menu-item index="4-2">选项4-2</el-menu-item>
+                  <el-menu-item index="4-1|test">选项4-1</el-menu-item>
+                  <el-menu-item index="4-2|test">选项4-2</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
             </el-menu>
@@ -75,8 +73,9 @@
         </el-row>
       </el-aside>
       <el-main>
-        <el-row style="line-height: 0;height: auto;float: left;padding: 0.5%;background: #C0C4CC;width: 100%"
-                v-show="includeTag">
+        <el-row
+          style="margin-bottom:10px;line-height: 0;height: auto;float: left;padding: 0.5%;background: #C0C4CC;width: 100%;"
+          v-show="includeTag">
           <el-tag
             :key="tag.name"
             v-for="tag in dynamicTags"
@@ -105,6 +104,7 @@ export default {
       dynamicTags: [],
       inputVisible: false,
       inputValue: '',
+      inputRouter: '',
       includeTag: true,
       isLogin: sessionStorage.getItem('token') === null ? false : true,
       usr: {
@@ -122,16 +122,29 @@ export default {
         this.dynamicTags[i].type = 'info'
       }
       this.dynamicTags[index].type = ''
+      let router = '/' + this.dynamicTags[index].route
+      console.log(this.dynamicTags[index])
+      this.$router.push(router)
     },
     closeTag(tag) {
       // 关闭标签
+      console.log(tag)
       let index = this.dynamicTags.indexOf(tag)
       this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
       if (this.dynamicTags.length <= 0) {
         this.includeTag = false
+        this.$router.push('/')
       }
       if (this.isIncludeActive() === false && this.dynamicTags.length > 0) {
-        this.dynamicTags[index - 1].type = ''
+        try {
+          this.dynamicTags[index - 1].type = ''
+          let router = '/' + this.dynamicTags[index - 1].route
+          this.$router.push(router)
+        } catch (e) {
+          this.dynamicTags[index].type = ''
+          let router = '/' + this.dynamicTags[index].route
+          this.$router.push(router)
+        }
       }
     },
     handleOpen(key, keyPath) {
@@ -142,13 +155,18 @@ export default {
     },
     handleSelect(key, keyPath) {
       // console.log(key, keyPath);
-      this.inputValue = keyPath[1]
+      this.inputValue = keyPath[1].split('|')[0]
+      this.inputRouter = keyPath[1].split('|')[1]
+      let router = '/' + this.inputRouter
+      this.$router.push(router)
       this.handleInputConfirm()
-      this.$router.push({path: '/test'})
+      // console.log(key, keyPath)
+      // this.$router.push({path: '/test'})
     },
     handleInputConfirm() {
       //增加新标签
       let inputValue = this.inputValue;
+      let inputRouter = this.inputRouter;
       let tagNames = []
       for (let i = 0; i < this.dynamicTags.length; i++) {
         tagNames.push(this.dynamicTags[i].name)
@@ -158,7 +176,7 @@ export default {
         for (let i = 0; i < this.dynamicTags.length; i++) {
           this.dynamicTags[i].type = 'info'
         }
-        this.dynamicTags.push({name: inputValue, type: ''});
+        this.dynamicTags.push({name: inputValue, type: '', route: inputRouter});
         this.includeTag = true
       } else {
         for (let i = 0; i < this.dynamicTags.length; i++) {
@@ -171,6 +189,7 @@ export default {
       }
       this.inputVisible = false;
       this.inputValue = '';
+      this.inputRouter = ''
     },
     isIncludeActive() {
       //检查是否有激活状态的标签
@@ -192,6 +211,7 @@ export default {
       this.$router.push({path: '/register'})
     },
     updateMessage: async function () {
+      //异步更新数据
       this.isLogin = false
       this.usr.name = ''
       this.usr.status = ''
@@ -202,6 +222,7 @@ export default {
       console.log(this.$data) // => '已更新'
     },
     loginOut() {
+      //退出登录
       let that = this
       this.$axios.get('/logout', {headers: {'Authorization': sessionStorage.getItem('token')}})
         .then((response) => {
@@ -308,7 +329,7 @@ body {
   background-color: #E9EEF3;
   color: #333;
   text-align: center;
-  line-height: 160px;
+  /*line-height: 160px;*/
   padding: 0;
 }
 

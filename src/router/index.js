@@ -1,20 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
+import ListStudent from "../views/teacher/ListStudent";
 // import TestChildRouter from "../views/TestChildRouter";
 
 Vue.use(Router)
 
-//获取原型对象上的push函数
+//鑾峰彇鍘熷瀷瀵硅薄涓婄殑push鍑芥暟
 const originalPush = Router.prototype.push
-//修改原型对象中的push方法
+//淇敼鍘熷瀷瀵硅薄涓殑push鏂规硶
 Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
 
 
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
   routes: [
     {
       path: '/',
@@ -24,6 +25,10 @@ export default new Router({
         path: 'test',
         name: "TestChildRouter",
         component: () => import("../views/TestChildRouter")
+      }, {
+        path: '/listStudent',
+        name: 'ListStudent',
+        component: () => import("../views/teacher/ListStudent")
       }]
     },
     /*{
