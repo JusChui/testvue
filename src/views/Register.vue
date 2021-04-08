@@ -58,7 +58,24 @@ export default {
     },
     submit() {
       if (this.checkForm()) {
-        console.log(this.ruleForm)
+        this.$axios.post('/user/addUser', this.ruleForm)
+          .then((response) => {
+            if (response.status === 200) {
+              if (response.data.rtCode === 200) {
+                this.$message({
+                  message: '注册成功',
+                  type: 'success'
+                })
+              } else {
+                this.$message({
+                  message: '注册失败：' + response.data.rtMsg,
+                  type: 'warning'
+                })
+              }
+            }
+          }).catch((error) => {
+          console.log(error)
+        })
       }
     },
     checkForm() {
