@@ -2,6 +2,9 @@
   <div class="login-wrap">
     <el-form :model="ruleForm" label-width="100px" class="demo-ruleForm login-container">
       <h3 style="text-align: center;">用户注册</h3>
+      <el-form-item label="姓名">
+        <el-input v-model="ruleForm.name" placeholder="请输入姓名"></el-input>
+      </el-form-item>
       <el-form-item label="用户名">
         <el-input v-model="ruleForm.username" placeholder="请输入用户名"></el-input>
       </el-form-item>
@@ -38,6 +41,7 @@ export default {
   data() {
     return {
       ruleForm: {
+        name: '',
         username: '',
         password: '',
         status: '',

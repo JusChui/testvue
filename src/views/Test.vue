@@ -64,8 +64,8 @@ export default {
                 that.$router.push("/")
               } else {
                 that.$message({
-                  message: response.data.rtMsg,
-                  // message:'登录失败',
+                  // message: response.data.rtMsg,
+                  message:'登录失败,请核对帐号和密码',
                   type: 'warning'
                 })
               }

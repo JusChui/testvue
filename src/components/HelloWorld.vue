@@ -219,7 +219,7 @@ export default {
       sessionStorage.removeItem('usr')
       // console.log(this.isLogin)
       await this.$nextTick()
-      console.log(this.$data) // => '已更新'
+      // console.log(this.$data) // => '已更新'
     },
     loginOut() {
       //退出登录
@@ -234,6 +234,9 @@ export default {
                 type: 'success'
               });
               this.updateMessage()
+              this.$router.push('/')
+              this.dynamicTags = []
+              this.includeTag = false
             } else {
               that.$message({
                 message: response.data.rtMsg,
@@ -252,7 +255,7 @@ export default {
     }
     let usr = JSON.parse(sessionStorage.getItem('usr'))
     if (usr != undefined && usr != '' && usr != null) {
-      this.usr.name = usr.username
+      this.usr.name = usr.name
       if (usr.status === 0) {
         this.usr.status = '老师'
       } else if (usr.status === 1) {

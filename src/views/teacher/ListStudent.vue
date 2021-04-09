@@ -10,18 +10,15 @@
       <el-form-item label="学生姓名">
         <el-input v-model="formInline.name" placeholder="请输入学生姓名"></el-input>
       </el-form-item>
-      <!--      <el-form-item label="活动区域">
-              <el-select v-model="formInline.region" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>-->
       <el-form-item>
         <el-button type="info" @click="onReset()">重置</el-button>
         <el-button type="primary" @click="onSubmit">查询</el-button>
       </el-form-item>
     </el-form>
     <el-divider></el-divider>
+    <el-row style="width: 90%;margin-bottom: 7px">
+      <el-button type="info" style="float: right">添加到我的学生</el-button>
+    </el-row>
     <!--  查询结果  -->
     <div style="text-align: center">
       <el-table
@@ -61,7 +58,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page=formInline.currentPage
-          :page-sizes="[1, 5, 10, 20, 50]"
+          :page-sizes="[5, 10, 20, 50]"
           :page-size=formInline.pageSize
           layout="total, sizes, prev, pager, next, jumper"
           :total=formInline.total>
@@ -123,6 +120,7 @@ export default {
     onReset() {
       this.formInline.username = ''
       this.formInline.email = ''
+      this.formInline.name = ''
     },
     /*toggleSelection(rows) {
       if (rows) {
@@ -135,6 +133,7 @@ export default {
     },*/
     handleSelectionChange(val) {
       this.multipleSelection = val;
+      console.log(val)
     },
     handleSizeChange(val) {
       this.formInline.pageSize = val
@@ -156,6 +155,10 @@ export default {
 .el-divider--horizontal {
   height: 2px;
   margin: 10px;
+}
+
+.el-table td, .el-table th {
+  text-align: center;
 }
 
 .el-table--fit {
