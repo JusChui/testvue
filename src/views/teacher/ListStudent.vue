@@ -17,7 +17,7 @@
     </el-form>
     <el-divider></el-divider>
     <el-row style="width: 90%;margin-bottom: 7px">
-      <el-button type="info" style="float: right">添加到我的学生</el-button>
+      <el-button type="info" style="float: right" v-on:click="addToMyStudent">添加到我的学生</el-button>
     </el-row>
     <!--  查询结果  -->
     <div style="text-align: center">
@@ -90,6 +90,36 @@ export default {
     }
   },
   methods: {
+    addToMyStudent() {
+      if (this.multipleSelection === null || this.multipleSelection.length <= 0) {
+        this.$message({
+          message: '请至少选择一个选择要添加的学生',
+          type: 'warning'
+        })
+        return false;
+      }
+      // console.log(this.multipleSelection)
+      this.$axios.post('/user/addToMyStudent', this.multipleSelection,
+        {headers: {'Authorization': sessionStorage.getItem('token')}})
+        .then((response) => {
+          if (response.status === 200) {
+            if (response.data.rtCode === 200) {
+              this.$message({
+                message: '添加成功',
+                type: 'success'
+              })
+            } else {
+              this.$message({
+                message: '添加失败:' + response.data.rtMsg,
+                type: 'error'
+              })
+            }
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
     onSubmit() {
       let params = this.formInline
       params.status = 1
@@ -133,7 +163,6 @@ export default {
     },*/
     handleSelectionChange(val) {
       this.multipleSelection = val;
-      console.log(val)
     },
     handleSizeChange(val) {
       this.formInline.pageSize = val
