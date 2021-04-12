@@ -152,15 +152,6 @@ export default {
       this.formInline.email = ''
       this.formInline.name = ''
     },
-    /*toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row);
-        });
-      } else {
-        this.$refs.multipleTable.clearSelection();
-      }
-    },*/
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -172,6 +163,9 @@ export default {
       this.formInline.currentPage = val
       this.onSubmit()
     }
+  },
+  mounted() {
+    this.onSubmit()
   }
 }
 </script>

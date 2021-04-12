@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import ListStudent from "../views/teacher/ListStudent";
+import ManageMyStudent from "../views/teacher/ManageMyStudent";
 // import TestChildRouter from "../views/TestChildRouter";
 
 Vue.use(Router)
@@ -29,13 +30,12 @@ export default new Router({
         path: '/listStudent',
         name: 'ListStudent',
         component: () => import("../views/teacher/ListStudent")
+      }, {
+        path: '/myStudent',
+        name: ManageMyStudent,
+        component: () => import("../views/teacher/ManageMyStudent")
       }]
     },
-    /*{
-      path: '/home',
-      name: 'HelloWorld',
-      component: HelloWorld
-    },*/
     {
       path: '/login',
       name: "Test",

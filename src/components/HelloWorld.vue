@@ -55,17 +55,17 @@
                 </template>
                 <el-menu-item-group>
                   <el-menu-item index="查看所有学生|listStudent">查看所有学生</el-menu-item>
-                  <el-menu-item index="管理我的学生|test">管理我的学生</el-menu-item>
+                  <el-menu-item index="管理我的学生|myStudent">管理我的学生</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
               <el-submenu index="4" v-show="usr.status === '老师'? true:false">
                 <template slot="title">
                   <i class="el-icon-setting"></i>
-                  <span slot="title">导航四</span>
+                  <span slot="title">题库管理</span>
                 </template>
                 <el-menu-item-group>
-                  <el-menu-item index="4-1|test">选项4-1</el-menu-item>
-                  <el-menu-item index="4-2|test">选项4-2</el-menu-item>
+                  <el-menu-item index="4-1|test">管理我的题库</el-menu-item>
+                  <!--                  <el-menu-item index="4-2|test">选项4-2</el-menu-item>-->
                 </el-menu-item-group>
               </el-submenu>
             </el-menu>
