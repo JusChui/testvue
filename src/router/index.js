@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import ListStudent from "../views/teacher/ListStudent";
 import ManageMyStudent from "../views/teacher/ManageMyStudent";
+import QuestionManagement from "../views/teacher/QuestionManagement";
 // import TestChildRouter from "../views/TestChildRouter";
 
 Vue.use(Router)
@@ -34,6 +35,10 @@ export default new Router({
         path: '/myStudent',
         name: ManageMyStudent,
         component: () => import("../views/teacher/ManageMyStudent")
+      },{
+        path: '/manageQuestion',
+        name: QuestionManagement,
+        component: () => import('../views/teacher/QuestionManagement')
       }]
     },
     {
