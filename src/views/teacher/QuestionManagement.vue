@@ -76,7 +76,7 @@ export default {
   },
   methods: {
     uploadQuestion() {
-      this.$prompt('请选择数据文件', '提示', {
+      this.$prompt('请选择数据文件', '导入文件', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputType: 'file',
