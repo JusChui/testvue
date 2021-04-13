@@ -64,7 +64,7 @@
                   <span slot="title">题库管理</span>
                 </template>
                 <el-menu-item-group>
-                  <el-menu-item index="4-1|manageQuestion">管理我的题库</el-menu-item>
+                  <el-menu-item index="管理我的题库|manageQuestion">管理我的题库</el-menu-item>
                   <!--                  <el-menu-item index="4-2|test">选项4-2</el-menu-item>-->
                 </el-menu-item-group>
               </el-submenu>

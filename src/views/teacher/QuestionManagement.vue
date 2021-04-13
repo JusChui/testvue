@@ -1,40 +1,54 @@
 <template>
   <div>
+    <el-row style="margin-bottom: 7px;width: 90%;">
+      <!--      <el-button>默认按钮</el-button>-->
+      <div style="float: right">
+        <el-button type="info" v-on:click="uploadQuestion">导入</el-button>
+        <el-button type="info" v-on:click="downloadQuestion">导出</el-button>
+      </div>
+    </el-row>
+    <el-divider></el-divider>
     <el-table
-      ref="multipleTable"
       :data="tableData"
-      tooltip-effect="dark"
       style="width: 80%"
-      @selection-change="handleSelectionChange"
-      @cell-mouse-enter="handleMouseHover">
+      @selection-change="handleSelectionChange">
       <el-table-column
         type="selection"
         width="45">
       </el-table-column>
-      <el-table-column
-        label="题目"
-        prop="address"
-        width="200"
-        show-overflow-tooltip="show-overflow-tooltip">
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline class="demo-table-expand"
+                   v-for="(index,item) in props.row.choices"
+                   :key="item">
+            <el-form-item>
+              <span :slot="label" class="el-form-item__label">{{ index.choiceName }}</span>
+              <span>{{ index.choice }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
       </el-table-column>
       <el-table-column
-        prop="name"
-        label="选项"
-        width="120">
+        label="题目ID"
+        prop="id"
+        width="95">
       </el-table-column>
       <el-table-column
-        prop="name"
-        label="姓名"
-        width="120">
+        label="题目内容"
+        prop="content">
       </el-table-column>
       <el-table-column
-        prop="name"
-        label="姓名"
-        width="120">
+        label="题目分值"
+        prop="score"
+        width="95">
+      </el-table-column>
+      <el-table-column
+        label="录入时间"
+        prop="creatTime"
+        width="152">
       </el-table-column>
     </el-table>
     <div class="block">
-      <!--        <span class="demonstration">完整功能</span>-->
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -53,62 +67,111 @@ export default {
   name: "QuestionManagement",
   data() {
     return {
-      tableData: [{
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-08',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-06',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-07',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }],
+      tableData: [],
       multipleSelection: [],
       currentPage: 1,
       pageSize: 10,
       total: 0
     }
   },
-
   methods: {
+    uploadQuestion() {
+      this.$prompt('请选择数据文件', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputType: 'file',
+      }).then(({value}) => {
+        this.$message({
+          type: 'success',
+          message: '你的邮箱是: ' + value
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消输入'
+        });
+      });
+    },
+    downloadQuestion() {
+      if (this.multipleSelection.length <= 0) {
+        this.$message({
+          message: '请至少选择一道题目进行导出',
+          type: 'warning'
+        })
+        return false
+      }
+      let params = {params: this.multipleSelection}
+      this.$axios.post('/question/downloadQuestions', params,
+        {headers: {'Authorization': sessionStorage.getItem('token')}})
+        .then((response) => {
+          // console.log(response)
+          if (response.status === 200) {
+
+          } else {
+
+          }
+        }).catch((error) => {
+        console.log(error)
+      })
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+      console.log(val)
     },
     handleSizeChange(val) {
       this.pageSize = val
-      this.listMyStudent()
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      this.listMyStudent()
     },
-    handleMouseHover(row, column, cell, event) {
-      console.log(cell.innerText)
-      console.log(event)
+    getQuestions(params) {
+      params = {
+        currentPage: this.currentPage,
+        pageSize: this.pageSize,
+      }
+      this.$axios.post('/question/getQuestions', params,
+        {headers: {'Authorization': sessionStorage.getItem('token')}})
+        .then((response) => {
+          // console.log(response)
+          if (response.status === 200) {
+            if (response.data.rtCode === 200) {
+              this.tableData = response.data.data
+              this.total = response.data.bean.total
+              this.$message({
+                message: response.data.rtMsg,
+                type: 'success'
+              })
+            } else {
+              this.$message({
+                message: response.data.rtMsg,
+                type: 'warning'
+              })
+            }
+          }
+        }).catch((error) => {
+        console.log(error)
+      })
     }
+  },
+  mounted() {
+    this.getQuestions()
   }
 }
 </script>
 
-<style scoped>
+<style>
+.demo-table-expand {
+  font-size: 0;
+}
 
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
 </style>
