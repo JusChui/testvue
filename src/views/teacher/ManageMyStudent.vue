@@ -74,7 +74,6 @@ export default {
       this.$axios.post('/user/getStudents', params,
         {headers: {'Authorization': sessionStorage.getItem('token')}})
         .then((response) => {
-          // console.log(response)
           if (response.status === 200) {
             if (response.data.rtCode === 200) {
               this.tableData = response.data.data

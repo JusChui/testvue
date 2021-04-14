@@ -98,7 +98,6 @@ export default {
         })
         return false;
       }
-      // console.log(this.multipleSelection)
       this.$axios.post('/user/addToMyStudent', this.multipleSelection,
         {headers: {'Authorization': sessionStorage.getItem('token')}})
         .then((response) => {
@@ -123,11 +122,9 @@ export default {
     onSubmit() {
       let params = this.formInline
       params.status = 1
-      console.log(params)
       this.$axios.post('/user/getStudents', params,
         {headers: {'Authorization': sessionStorage.getItem('token')}})
         .then((response) => {
-          // console.log(response)
           if (response.status === 200) {
             if (response.data.rtCode === 200) {
               this.tableData = response.data.data

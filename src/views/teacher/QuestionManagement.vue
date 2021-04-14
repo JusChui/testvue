@@ -1,12 +1,40 @@
 <template>
   <div>
     <el-row style="margin-bottom: 7px;width: 90%;">
-      <!--      <el-button>默认按钮</el-button>-->
       <div style="float: right">
         <el-button type="info" v-on:click="uploadQuestion">导入</el-button>
         <el-button type="info" v-on:click="downloadQuestion">导出</el-button>
       </div>
     </el-row>
+    <el-dialog
+      title="从文件导入"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <div style="margin-bottom: 5px">
+        <el-link :underline="false" type="primary">点击此处下载批量导入模板文件</el-link>
+      </div>
+      <el-upload
+        class="upload-demo"
+        drag
+        ref="upload"
+        action
+        multiple="multiple"
+        :before-upload="beforeUpload"
+        :before-remove="beforeRemove"
+        :on-change="fileChange"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :file-list="fileList">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">只能上传xlsx文件，且不超过500kb</div>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="submitFile">确 定</el-button>
+  </span>
+    </el-dialog>
     <el-divider></el-divider>
     <el-table
       :data="tableData"
@@ -71,26 +99,75 @@ export default {
       multipleSelection: [],
       currentPage: 1,
       pageSize: 10,
-      total: 0
+      total: 0,
+      dialogVisible: false,
+      fileList: []
     }
   },
   methods: {
-    uploadQuestion() {
-      this.$prompt('请选择数据文件', '导入文件', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        inputType: 'file',
-      }).then(({value}) => {
+    submitFile() {
+      console.log(this.fileList)
+      if (this.fileList.length < 1) {
         this.$message({
-          type: 'success',
-          message: '你的邮箱是: ' + value
+          message: '未选取上传模板',
+          type: 'error'
         });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消输入'
-        });
+        return;
+      }
+      let formData = new FormData();
+      this.fileList.forEach(function (file) {
+        formData.append("file", file.raw, file.name);
       });
+      this.$axios.post('/question/uploadQuestions', formData, {
+        headers: {
+          'Authorization': sessionStorage.getItem('token'),
+          'Content-Type': 'multipart/form-data',
+        }
+      }).then((response) => {
+        if (response.data.rtCode === 200) {
+          this.$message({
+            message: "导入成功",
+            type: 'success'
+          })
+          this.dialogVisible = false
+        } else {
+          this.$message({
+            message: "导入失败",
+            type: 'error'
+          })
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    uploadQuestion() {
+      this.dialogVisible = true
+    },
+    handleRemove(file, fileList) {
+      console.log("handleRemove", file, fileList);
+      this.fileList = fileList
+    },
+    handlePreview(file) {
+      console.log("handlePreview", file);
+    },
+    beforeUpload(file) {
+      console.log("before Upload", file)
+    },
+    beforeRemove(file, fileList) {
+      console.log("beforeRemove", file, fileList);
+    },
+    fileChange(file, fileList) {
+      console.log("fileChange", file, fileList);
+      this.fileList = fileList
+    },
+    handleClose(done) {
+      // 关闭对话框提示
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {
+        });
     },
     downloadQuestion() {
       if (this.multipleSelection.length <= 0) {
