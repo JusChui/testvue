@@ -2,6 +2,7 @@
   <div>
     <el-row style="margin-bottom: 7px;width: 90%;">
       <div style="float: right">
+        <el-button type="info" v-on:click="deleteQuestion">删除</el-button>
         <el-button type="info" v-on:click="uploadQuestion">导入</el-button>
         <el-button type="info" v-on:click="downloadQuestion">导出</el-button>
       </div>
@@ -12,7 +13,7 @@
       width="30%"
       :before-close="handleClose">
       <div style="margin-bottom: 5px">
-        <el-link :underline="false" type="primary">点击此处下载批量导入模板文件</el-link>
+        <el-link :underline="false" type="primary" v-on:click="downloadTemplate">点击此处下载批量导入模板文件</el-link>
       </div>
       <el-upload
         class="upload-demo"
@@ -105,8 +106,56 @@ export default {
     }
   },
   methods: {
+    deleteQuestion() {
+      if (this.multipleSelection.length <= 0) {
+        this.$message({
+          message: '请至少选择一道题目删除',
+          type: 'warning'
+        })
+        return false
+      }
+      let params = {params: this.multipleSelection}
+      this.$axios.post('/question/deleteQuestions', params,
+        {headers: {'Authorization': sessionStorage.getItem('token')}})
+        .then((response) => {
+          if (response.data.rtCode === 200) {
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+            this.getQuestions()
+          } else {
+            this.$message({
+              message: '删除失败',
+              type: 'error'
+            })
+          }
+        }).catch((error) => {
+        console.log(error)
+      })
+    },
+    downloadTemplate() {
+      this.$axios.get('/question/getTemplate',
+        {headers: {'Authorization': sessionStorage.getItem('token')}})
+        .then((response) => {
+          console.log(response)
+          if (response.data.rtCode === 200) {
+            this.$message({
+              message: response.data.rtMsg,
+              type: 'success'
+            })
+            this.dialogVisible = false
+          } else {
+            this.$message({
+              message: '模板文件下载失败',
+              type: 'error'
+            })
+          }
+        }).catch((error) => {
+        console.log(error)
+      })
+    },
     submitFile() {
-      console.log(this.fileList)
       if (this.fileList.length < 1) {
         this.$message({
           message: '未选取上传模板',
@@ -129,6 +178,7 @@ export default {
             message: "导入成功",
             type: 'success'
           })
+          this.getQuestions()
           this.dialogVisible = false
         } else {
           this.$message({
@@ -181,11 +231,17 @@ export default {
       this.$axios.post('/question/downloadQuestions', params,
         {headers: {'Authorization': sessionStorage.getItem('token')}})
         .then((response) => {
-          // console.log(response)
-          if (response.status === 200) {
-
+          console.log(response)
+          if (response.data.rtCode === 200) {
+            this.$message({
+              message: response.data.rtMsg,
+              type: 'success'
+            })
           } else {
-
+            this.$message({
+              message: response.data.rtMsg,
+              type: 'error'
+            })
           }
         }).catch((error) => {
         console.log(error)
@@ -197,9 +253,11 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val
+      this.getQuestions()
     },
     handleCurrentChange(val) {
       this.currentPage = val
+      this.getQuestions()
     },
     getQuestions(params) {
       params = {
